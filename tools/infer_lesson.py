@@ -84,23 +84,32 @@ def query_search(keyword=""):
 
 
 def get_relative_lesson(image):
+    print("get rela")
     query_vec = embedded.get_vector(image)
+    print("get rela1")
     table = []
     sqliteConnection = None
     rs = []
     try:
         sqliteConnection = sqlite3.connect("./data/HIME.db")
+        print("get rela2")
         query = "SELECT * from IMAGINE"
         cursor = sqliteConnection.execute(query)
         data = cursor.fetchall()
+        print("get rela3")
+        print(data)
+
         for row in data:
-            db_vec = load_vector_from_path_db(row[3])
+            db_embedding_path = "./data/embedding/" + row[2]
+            db_vec = load_vector_from_path_db(db_embedding_path)
             score = cosine_similarity(db_vec, query_vec)
             table.append(score)
 
         min_value = min(table)
         min_index = table.index(min_value)
-
+        inx = np.argsort(np.array(table))
+        print(inx)
+        print(np.array(data)[inx])
         rs = data[min_index]
 
     except sqlite3.Error as error:

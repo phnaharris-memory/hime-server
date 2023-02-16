@@ -5,15 +5,20 @@ from urllib.request import urlopen, Request
 
 
 async def decode_image(image):
+    print("debug 1")
     image_data = await image.read()
     name = image.filename
 
+    print("debug 2")
     if name == "base64":
         image_data = base64.b64decode(image_data)
 
+    print("debug 3")
     file_bytes = np.fromstring(image_data, np.uint8)
-    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    print("debug 4")
+    image = cv2.imdecode(file_bytes, 1)
 
+    print("debug 1")
     return image
 
 

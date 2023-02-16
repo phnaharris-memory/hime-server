@@ -50,12 +50,12 @@ def search(body: SearchBody):
     return query_search(body.keyword)
 
 
-@router.post("/getrelativelesson")
-async def getrelativelesson(image: UploadFile = File(...)):
+@router.post("/upload")
+async def upload(image: UploadFile = File()):
     try:
-        # save_upload_file(image, pathlib.Path("./images/" + image.filename))
-        image = await decode_image(image)
-        return get_relative_lesson(image)
+        save_upload_file(image, pathlib.Path("./images/" + image.filename))
+        # image = await decode_image(image)
+        return get_relative_lesson("./images/" + image.filename)
 
     except:
         e = sys.exc_info()[1]

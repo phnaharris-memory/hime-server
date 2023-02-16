@@ -28,7 +28,12 @@ class Embedded:
         self.to_tensor = transforms.ToTensor()
 
     def get_vector(self, image_name):
+        print("image_name ne")
+        print(image_name)
+        # img = Image.open(image_name)
         img = Image.open(image_name)
+        print("img ne")
+        print(img)
         t_img = Variable(self.normalize(self.to_tensor(self.scaler(img))).unsqueeze(0))
         my_embedding = torch.zeros(512)
 
@@ -59,7 +64,10 @@ def parse_text_from_html(html_str):
 
 
 def load_vector_from_path_db(PATH):
-    return np.load(PATH, dtype=np.float64)
+    print("load_vector_from_path_db")
+    print(PATH)
+    # return np.load(PATH, dtype=np.float64)
+    return np.load(PATH)
 
 
 def save_upload_file(upload_file: UploadFile, destination: pathlib.Path) -> None:
