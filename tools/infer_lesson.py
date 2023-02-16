@@ -27,8 +27,10 @@ def query_thing(query):
         sqliteConnection = sqlite3.connect("./data/HIME.db")
 
         cursor = sqliteConnection.execute(query)
-        for row in cursor:
-            result.append(row)
+        result = [
+            dict((cursor.description[i][0], value) for i, value in enumerate(row))
+            for row in cursor.fetchall()
+        ]
 
     except sqlite3.Error as error:
         print("Failed to execute the above query", error)
