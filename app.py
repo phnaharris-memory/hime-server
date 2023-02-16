@@ -5,6 +5,7 @@ import uvicorn
 app = FastAPI()
 app.include_router(lesson.router)
 
+
 def run_server():
     """Run server."""
 
@@ -12,8 +13,9 @@ def run_server():
     uvicorn.run(
         "app:app",
         # host='0.0.0.0',
-        port=1234,
+        port=3000,
     )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     run_server()
