@@ -51,7 +51,7 @@ def search(body: SearchBody):
 
 
 @router.post("/upload")
-async def upload(image: UploadFile = File()):
+async def upload(image: UploadFile = File(...)):
     try:
         save_upload_file(image, pathlib.Path("./images/" + image.filename))
         # image = await decode_image(image)

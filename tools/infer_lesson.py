@@ -105,12 +105,9 @@ def get_relative_lesson(image):
             score = cosine_similarity(db_vec, query_vec)
             table.append(score)
 
-        min_value = min(table)
-        min_index = table.index(min_value)
-        inx = np.argsort(np.array(table))
-        print(inx)
-        print(np.array(data)[inx])
-        rs = data[min_index]
+        max_value = max(table)
+        max_index = table.index(max_value)
+        rs = data[max_index]
 
     except sqlite3.Error as error:
         print("Failed to execute the above query", error)
