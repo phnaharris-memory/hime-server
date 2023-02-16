@@ -60,6 +60,29 @@ def get_story(id=None):
     return query_thing(query)
 
 
+def query_search(keyword=""):
+    query_baihoc = "SELECT * from BAI_HOC"
+    column_baihoc = "ND_baihoc"
+    if keyword != None:
+        query_baihoc = (
+            query_baihoc + " WHERE instr(" + column_baihoc + ", '" + keyword + "') > 0;"
+        )
+
+    query_cauchuyen = "SELECT * from STORY"
+    column_cauchuyen = "CONTENT"
+    if keyword != None:
+        query_cauchuyen = (
+            query_cauchuyen
+            + " WHERE instr("
+            + column_cauchuyen
+            + ", '"
+            + keyword
+            + "') > 0;"
+        )
+
+    return query_thing(query_baihoc) + query_thing(query_cauchuyen)
+
+
 def get_relative_lesson(image):
     query_vec = embedded.get_vector(image)
     table = []

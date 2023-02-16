@@ -1,3 +1,5 @@
+import pathlib
+from fastapi import UploadFile
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -5,6 +7,7 @@ import torchvision.transforms as transforms
 from torch.autograd import Variable
 from PIL import Image
 
+import shutil
 import numpy as np
 from numpy import dot
 from numpy.linalg import norm
@@ -57,3 +60,8 @@ def parse_text_from_html(html_str):
 
 def load_vector_from_path_db(PATH):
     return np.load(PATH, dtype=np.float64)
+
+
+def save_upload_file(upload_file: UploadFile, destination: pathlib.Path) -> None:
+    with destination.open("wb") as buffer:
+        shutil.copyfileobj(upload_file.file, buffer)
