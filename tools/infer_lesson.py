@@ -100,7 +100,7 @@ def get_relative_lesson(image):
         print(data)
 
         for row in data:
-            db_embedding_path = "./data/embedding/" + row[2]
+            db_embedding_path = "./data/embedding/" + row[3]
             db_vec = load_vector_from_path_db(db_embedding_path)
             score = cosine_similarity(db_vec, query_vec)
             table.append(score)
