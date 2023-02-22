@@ -48,7 +48,7 @@ def ser_baihoc(baihoc):
 
     res["id"] = baihoc["ID_BAIHOC"]
     res["title"] = baihoc["Title_baihoc"]
-    # res["shorttext"] = baihoc["short_text"]
+    res["shorttext"] = baihoc["short_text"]
     res["html"] = baihoc["ND_baihoc"]
 
     return res
