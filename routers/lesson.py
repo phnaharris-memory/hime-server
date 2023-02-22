@@ -9,7 +9,15 @@ sys.path.append(__dir__)
 sys.path.append(os.path.abspath(os.path.join(__dir__, "..")))
 
 from fastapi import APIRouter, HTTPException, File, Query, UploadFile
-from tools.infer_lesson import get_baihoc, get_relative_lesson, get_story, query_search
+from tools.infer_lesson import (
+    get_baihoc,
+    get_relative_lesson,
+    get_story,
+    get_story_by_image,
+    query_search,
+    get_story_by_image,
+)
+
 from routers.utils import decode_image
 
 router = APIRouter(
@@ -54,8 +62,11 @@ def search(body: SearchBody):
 def upload(image: UploadFile = File(...)):
     try:
         save_upload_file(image, pathlib.Path("./images/" + image.filename))
-        # image = await decode_image(image)
-        return get_relative_lesson("./images/" + image.filename)
+        img_id = get_relative_lesson("./images/" + image.filename)
+        print("img neeee")
+        print(img_id)
+        return get_story_by_image(img_id)
+        # return get_relative_lesson("./images/" + image.filename)
 
     except:
         e = sys.exc_info()[1]

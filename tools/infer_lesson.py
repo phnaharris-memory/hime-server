@@ -42,13 +42,43 @@ def query_thing(query):
     return result
 
 
+def ser_baihoc(baihoc):
+    print(baihoc)
+    res = {}
+
+    res["id"] = baihoc["ID_BAIHOC"]
+    res["title"] = baihoc["Title_baihoc"]
+    # res["shorttext"] = baihoc["short_text"]
+    res["html"] = baihoc["ND_baihoc"]
+
+    return res
+
+
 def get_baihoc(id=None):
     query = "SELECT * from BAI_HOC"
 
     if id != None:
         query = query + " WHERE ID_BAIHOC = " + id
 
-    return query_thing(query)
+    res_query = query_thing(query)
+    res = []
+
+    for baihoc in res_query:
+        baihoc = ser_baihoc(baihoc)
+        res.append(baihoc)
+
+    return res
+
+
+def ser_story(story):
+    res = {}
+
+    res["id"] = story["ID_Content"]
+    res["title"] = story["TITLE"]
+    res["shorttext"] = story["short_text"]
+    res["html"] = story["CONTENT"]
+
+    return res
 
 
 def get_story(id=None):
@@ -57,7 +87,14 @@ def get_story(id=None):
     if id != None:
         query = query + " WHERE ID_Content = " + id
 
-    return query_thing(query)
+    res_query = query_thing(query)
+    res = []
+
+    for story in res_query:
+        story = ser_story(story)
+        res.append(story)
+
+    return res
 
 
 def query_search(keyword=""):
@@ -80,7 +117,36 @@ def query_search(keyword=""):
             + "') > 0;"
         )
 
-    return query_thing(query_baihoc) + query_thing(query_cauchuyen)
+    res = []
+
+    res_query_baihoc = query_thing(query_baihoc)
+    res_query_cauchuyen = query_thing(query_cauchuyen)
+
+    for baihoc in res_query_baihoc:
+        baihoc = ser_baihoc(baihoc)
+        res.append(baihoc)
+
+    for story in res_query_cauchuyen:
+        story = ser_story(story)
+        res.append(story)
+
+    return res
+
+
+def get_story_by_image(id=None):
+    query = "SELECT * from STORY"
+
+    if id != None:
+        query = query + " WHERE ID_IMG = " + str(id)
+
+    res_query = query_thing(query)
+    res = []
+
+    for story in res_query:
+        story = ser_story(story)
+        res.append(story)
+
+    return res
 
 
 def get_relative_lesson(image):
@@ -107,7 +173,7 @@ def get_relative_lesson(image):
 
         max_value = max(table)
         max_index = table.index(max_value)
-        rs = data[max_index]
+        rs = data[max_index][0]
 
     except sqlite3.Error as error:
         print("Failed to execute the above query", error)
