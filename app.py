@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from routers import lesson
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 app = FastAPI()
 app.include_router(lesson.router)
+app.mount("/data", StaticFiles(directory="data"), name="data")
 
 
 def run_server():
