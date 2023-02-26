@@ -1,3 +1,4 @@
+from logging import currentframe
 import os, sys
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +43,10 @@ def query_thing(query):
     return result
 
 
+default_img_host = "daylacaiimageendpoint"
+current_img_host = "https://c5d7-27-78-205-115.ap.ngrok.io/data"
+
+
 def ser_baihoc(baihoc):
     print(baihoc)
     res = {}
@@ -50,6 +55,8 @@ def ser_baihoc(baihoc):
     res["title"] = baihoc["Title_baihoc"]
     res["shorttext"] = baihoc["short_text"]
     res["html"] = baihoc["ND_baihoc"]
+
+    res["html"] = res["html"].replace(default_img_host, current_img_host)
 
     return res
 
@@ -77,6 +84,8 @@ def ser_story(story):
     res["title"] = story["TITLE"]
     res["shorttext"] = story["short_text"]
     res["html"] = story["CONTENT"]
+
+    res["html"] = res["html"].replace(default_img_host, current_img_host)
 
     return res
 
