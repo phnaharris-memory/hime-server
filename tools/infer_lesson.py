@@ -102,7 +102,7 @@ def query_search(keyword=""):
     column_baihoc = "ND_baihoc"
     if keyword != None:
         query_baihoc = (
-            query_baihoc + " WHERE instr(" + column_baihoc + ", '" + keyword + "') > 0;"
+            query_baihoc + " WHERE INSTR(" + column_baihoc + ", '" + keyword + "') > 0;"
         )
 
     query_cauchuyen = "SELECT * from STORY"
