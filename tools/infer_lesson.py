@@ -56,7 +56,10 @@ def ser_baihoc(baihoc):
     res["shorttext"] = baihoc["short_text"]
     res["html"] = baihoc["ND_baihoc"]
 
-    res["html"] = res["html"].replace(default_img_host, current_img_host)
+    try:
+        res["html"] = res["html"].replace(default_img_host, current_img_host)
+    except Exception as e:
+        pass
 
     return res
 
@@ -85,7 +88,10 @@ def ser_story(story):
     res["shorttext"] = story["short_text"]
     res["html"] = story["CONTENT"]
 
-    res["html"] = res["html"].replace(default_img_host, current_img_host)
+    try:
+        res["html"] = res["html"].replace(default_img_host, current_img_host)
+    except Exception as e:
+        pass
 
     return res
 
