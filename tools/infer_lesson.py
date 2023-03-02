@@ -44,6 +44,7 @@ def query_thing(query):
 
 
 default_img_host = "daylacaiimageendpoint"
+default_avatar = "avatar.png"
 current_img_host = "https://c5d7-27-78-205-115.ap.ngrok.io/data"
 
 
@@ -55,6 +56,11 @@ def ser_baihoc(baihoc):
     res["title"] = baihoc["Title_baihoc"]
     res["shorttext"] = baihoc["short_text"]
     res["html"] = baihoc["ND_baihoc"]
+    res["avatar"] = (
+        current_img_host
+        + "/images/"
+        + (default_avatar if (len(baihoc["avatar"]) == 0) else baihoc["avatar"])
+    )
 
     try:
         res["html"] = res["html"].replace(default_img_host, current_img_host)
@@ -87,6 +93,11 @@ def ser_story(story):
     res["title"] = story["TITLE"]
     res["shorttext"] = story["short_text"]
     res["html"] = story["CONTENT"]
+    res["avatar"] = (
+        current_img_host
+        + "/images/"
+        + (default_avatar if (len(story["avatar"]) == 0) else story["avatar"])
+    )
 
     try:
         res["html"] = res["html"].replace(default_img_host, current_img_host)
