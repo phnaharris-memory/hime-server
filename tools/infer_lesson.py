@@ -45,7 +45,7 @@ def query_thing(query):
 
 default_img_host = "daylacaiimageendpoint"
 default_avatar = "avatar.png"
-current_img_host = "https://c5d7-27-78-205-115.ap.ngrok.io/data"
+current_img_host = os.getenv("NGROK_ENDPOINT", default="") + "/data"
 
 
 def ser_baihoc(baihoc):
