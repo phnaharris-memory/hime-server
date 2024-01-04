@@ -20,12 +20,6 @@ from tools.infer_lesson import (
 
 from routers.utils import decode_image
 
-
-# Update
-from tools.ocr_img import tesseract_process
-from meilisearch import Client
-# End
-
 router = APIRouter(
     prefix="/v1",
     tags=["models"],
@@ -73,27 +67,6 @@ def upload(image: UploadFile = File(...)):
         print(img_id)
         return get_story_by_image(img_id)
         # return get_relative_lesson("./images/" + image.filename)
-
-    except:
-        e = sys.exc_info()[1]
-        raise HTTPException(status_code=500, detail=str(e))
-
-# Update
-search_client = Client("http://127.0.0.1:7700", "Z4bpTsc3yeTipItK22QzDGcUjjlzWOfjGQYcOmSmSEE")
-
-@router.post("/uploadAndOcr")
-def imgToText(image: UploadFile = File(...)):
-    try:
-        save_upload_file(image, pathlib.Path("./images/" + image.filename))
-        dataToSearch = tesseract_process("./images/" + image.filename)
-        results = []
-        index = search_client.get_index("indexBaiHoc")
-        search_result = index.search(dataToSearch)
-        results.append(search_result)
-        index = search_client.get_index("indexCauChuyen")
-        search_result = index.search(dataToSearch)
-        results.append(search_result)
-        return results
 
     except:
         e = sys.exc_info()[1]
