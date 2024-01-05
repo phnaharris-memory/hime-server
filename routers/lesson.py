@@ -1,5 +1,6 @@
 import os, sys
-
+import meilisearch
+from torch import less
 from torchvision.utils import pathlib
 from pydantic import BaseModel
 from tools.utils import save_upload_file
@@ -16,9 +17,11 @@ from tools.infer_lesson import (
     get_story_by_image,
     query_search,
     get_story_by_image,
+    query_thing,
 )
 
 from routers.utils import decode_image
+from tools.infer_lesson import ser_story, ser_baihoc
 
 router = APIRouter(
     prefix="/v1",
@@ -71,3 +74,32 @@ def upload(image: UploadFile = File(...)):
     except:
         e = sys.exc_info()[1]
         raise HTTPException(status_code=500, detail=str(e))
+
+
+client = meilisearch.Client("http://127.0.0.1:7700", "masterKey")
+index_story = client.index("story")
+index_lesson = client.index("lesson")
+
+
+@router.post("/migration")
+def migration():
+    query_story = "SELECT * from STORY"
+    query_lesson = "SELECT * from BAI_HOC"
+
+    _stories = query_thing(query_story)
+    _lessons = query_thing(query_lesson)
+
+    stories = []
+    for story in _stories:
+        story = ser_story(story)
+        stories.append(story)
+
+    lessons = []
+    for lesson in _lessons:
+        lesson = ser_baihoc(lesson)
+        lessons.append(lesson)
+
+    index_story.add_documents(stories)
+    index_lesson.add_documents(lessons)
+
+    return "OK"
