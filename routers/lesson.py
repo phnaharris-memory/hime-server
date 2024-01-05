@@ -22,6 +22,7 @@ from tools.infer_lesson import (
 
 from routers.utils import decode_image
 from tools.infer_lesson import ser_story, ser_baihoc
+from tools.ocr_img import tesseract_process
 
 router = APIRouter(
     prefix="/v1",
@@ -103,3 +104,20 @@ def migration():
     index_lesson.add_documents(lessons)
 
     return "OK"
+
+@router.post("/uploadAndOCR")
+def imgToText(image: UploadFile = File(...)):
+    try:
+        save_upload_file(image, pathlib.Path("./images/" + image.filename))
+        dataToSearch = tesseract_process("./images/" + image.filename) 
+        results = []
+        index = client.get_index("indexBaiHoc")
+        search_result = index.search(dataToSearch)
+        results.append(search_result)
+        index = client.get_index("indexCauChuyen")
+        search_result = index.search(dataToSearch)
+        results.append(search_result)
+        return results
+    except:
+        e = sys.exc_info()[1]
+        raise HTTPException(status_code=500, detail=str(e))
