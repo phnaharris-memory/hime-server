@@ -1,5 +1,5 @@
 import os, sys
-import meilisearch
+import meilisearch_python_sdk
 from torch import less
 from torchvision.utils import pathlib
 from pydantic import BaseModel
@@ -77,13 +77,13 @@ def upload(image: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-client = meilisearch.Client("http://127.0.0.1:7700", "masterKey")
+client = meilisearch_python_sdk.AsyncClient("http://127.0.0.1:7700", "masterKey")
 index_story = client.index("story")
 index_lesson = client.index("lesson")
 
 
 @router.post("/migration")
-def migration():
+async def migration():
     query_story = "SELECT * from STORY"
     query_lesson = "SELECT * from BAI_HOC"
 
@@ -100,16 +100,17 @@ def migration():
         lesson = ser_baihoc(lesson)
         lessons.append(lesson)
 
-    index_story.add_documents(stories)
-    index_lesson.add_documents(lessons)
+    await index_story.add_documents(stories)
+    await index_lesson.add_documents(lessons)
 
     return "OK"
+
 
 @router.post("/uploadAndOCR")
 def imgToText(image: UploadFile = File(...)):
     try:
         save_upload_file(image, pathlib.Path("./images/" + image.filename))
-        dataToSearch = tesseract_process("./images/" + image.filename) 
+        dataToSearch = tesseract_process("./images/" + image.filename)
         results = []
         index = client.get_index("indexBaiHoc")
         search_result = index.search(dataToSearch)
