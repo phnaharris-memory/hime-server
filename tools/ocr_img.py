@@ -15,7 +15,7 @@ def process_ocr(path):
     client = OpenAI(api_key=openai_apikey)
 
     chatgpt_prompt = (
-        "Chỉnh sửa những từ sai, chỉ chỉnh sửa, không thêm hoặc cắt bỏ nội dung của đoạn sau.\n\n"
+        "Lọc ra 10 từ khóa của đoạn văn dưới. Chỉ trả về từ khóa, cách nhau bởi dấu phẩy.\n\n"
         + ocr_result
     )
     chat_completion = client.chat.completions.create(
