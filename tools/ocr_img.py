@@ -1,7 +1,10 @@
 from PIL import Image
 from openai import OpenAI
 
+import os
 import pytesseract
+
+openai_apikey = os.getenv("OPENAI_APIKEY", default="")
 
 
 def process_ocr(path):
@@ -9,9 +12,7 @@ def process_ocr(path):
         Image.open(path), config="--psm 3", lang="vie"
     )
 
-    client = OpenAI(
-        api_key="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",
-    )
+    client = OpenAI(api_key=openai_apikey)
 
     chatgpt_prompt = (
         "Chỉnh sửa những từ sai, chỉ chỉnh sửa, không thêm hoặc cắt bỏ nội dung của đoạn sau.\n\n"
