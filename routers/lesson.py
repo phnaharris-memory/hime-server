@@ -22,13 +22,17 @@ from tools.infer_lesson import (
 
 from routers.utils import decode_image
 from tools.infer_lesson import ser_story, ser_baihoc
-from tools.ocr_img import tesseract_process
+from tools.ocr_img import process_ocr
 
 router = APIRouter(
     prefix="/v1",
     tags=["models"],
     responses={404: {"description": "Not found"}},
 )
+
+client = meilisearch.Client("http://127.0.0.1:7700", "masterKey")
+index_story = client.index("story")
+index_lesson = client.index("lesson")
 
 
 @router.get("/getbaihoc")
@@ -77,11 +81,6 @@ def upload(image: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-client = meilisearch.Client("http://127.0.0.1:7700", "masterKey")
-index_story = client.index("story")
-index_lesson = client.index("lesson")
-
-
 @router.post("/migration")
 def migration():
     query_story = "SELECT * from STORY"
@@ -105,18 +104,18 @@ def migration():
 
     return "OK"
 
-@router.post("/uploadAndOCR")
-def imgToText(image: UploadFile = File(...)):
+
+@router.post("/ocr")
+def ocr(image: UploadFile = File(...)):
     try:
         save_upload_file(image, pathlib.Path("./images/" + image.filename))
-        dataToSearch = tesseract_process("./images/" + image.filename) 
-        results = []
-        index = client.get_index("indexBaiHoc")
-        search_result = index.search(dataToSearch)
-        results.append(search_result)
-        index = client.get_index("indexCauChuyen")
-        search_result = index.search(dataToSearch)
-        results.append(search_result)
+        dataToSearch = process_ocr("./images/" + image.filename)
+        search_opts = {
+            "attributes_to_search_on": ["shorttext", "html"],
+        }
+        stories = index_story.search(dataToSearch, search_opts)
+        lessons = index_lesson.search(dataToSearch, search_opts)
+        results = stories.hits + lessons.hits
         return results
     except:
         e = sys.exc_info()[1]
