@@ -33,6 +33,7 @@ router = APIRouter(
 client = meilisearch.Client("http://127.0.0.1:7700", "masterKey")
 index_story = client.index("story")
 index_lesson = client.index("lesson")
+index_share = client.index("share")
 
 
 @router.get("/getbaihoc")
@@ -65,10 +66,10 @@ def search(body: SearchBody):
     search_opts = {
         "attributesToSearchOn": ["id", "title", "shorttext", "html"],
     }
-    stories = index_story.search(keyword, search_opts)
-    lessons = index_lesson.search(keyword, search_opts)
-    results = stories["hits"] + lessons["hits"]
-    return results
+    # stories = index_story.search(keyword, search_opts)
+    # lessons = index_lesson.search(keyword, search_opts)
+    # results = stories["hits"] + lessons["hits"]
+    return index_share.search(keyword, search_opts)["hits"]
 
 
 @router.post("/upload")
@@ -110,6 +111,28 @@ def migration():
     return "OK"
 
 
+@router.post("/migrations")
+def migrations():
+    query_story = "SELECT * from STORY"
+    query_lesson = "SELECT * from BAI_HOC"
+
+    _stories = query_thing(query_story)
+    _lessons = query_thing(query_lesson)
+
+    stories = []
+    for story in _stories:
+        story = ser_story(story)
+        stories.append(story)
+
+    lessons = []
+    for lesson in _lessons:
+        lesson = ser_baihoc(lesson)
+        lessons.append(lesson)
+
+    shares = stories + lessons
+    index_share.add_documents(shares)
+
+
 @router.post("/ocr")
 def ocr(image: UploadFile = File(...)):
     try:
@@ -118,10 +141,10 @@ def ocr(image: UploadFile = File(...)):
         search_opts = {
             "attributesToSearchOn": ["shorttext", "html"],
         }
-        stories = index_story.search(dataToSearch, search_opts)
-        lessons = index_lesson.search(dataToSearch, search_opts)
-        results = stories["hits"] + lessons["hits"]
-        return results
+        # stories = index_story.search(dataToSearch, search_opts)
+        # lessons = index_lesson.search(dataToSearch, search_opts)
+        # results = stories["hits"] + lessons["hits"]
+        return index_share.search(dataToSearch, search_opts)["hits"]
     except:
         e = sys.exc_info()[1]
         raise HTTPException(status_code=500, detail=str(e))
