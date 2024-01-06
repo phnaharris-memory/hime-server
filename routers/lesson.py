@@ -63,7 +63,7 @@ class SearchBody(BaseModel):
 def search(body: SearchBody):
     keyword = body.keyword
     search_opts = {
-        "attributes_to_search_on": ["id", "title", "shorttext", "html"],
+        "attributesToSearchOn": ["id", "title", "shorttext", "html"],
     }
     stories = index_story.search(keyword, search_opts)
     lessons = index_lesson.search(keyword, search_opts)
@@ -116,7 +116,7 @@ def ocr(image: UploadFile = File(...)):
         save_upload_file(image, pathlib.Path("./images/" + image.filename))
         dataToSearch = process_ocr("./images/" + image.filename)
         search_opts = {
-            "attributes_to_search_on": ["shorttext", "html"],
+            "attributesToSearchOn": ["shorttext", "html"],
         }
         stories = index_story.search(dataToSearch, search_opts)
         lessons = index_lesson.search(dataToSearch, search_opts)
