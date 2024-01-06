@@ -67,7 +67,7 @@ def search(body: SearchBody):
     }
     stories = index_story.search(keyword, search_opts)
     lessons = index_lesson.search(keyword, search_opts)
-    results = stories.hits + lessons.hits
+    results = stories["hits"] + lessons["hits"]
     return results
 
 
@@ -120,7 +120,7 @@ def ocr(image: UploadFile = File(...)):
         }
         stories = index_story.search(dataToSearch, search_opts)
         lessons = index_lesson.search(dataToSearch, search_opts)
-        results = stories.hits + lessons.hits
+        results = stories["hits"] + lessons["hits"]
         return results
     except:
         e = sys.exc_info()[1]
