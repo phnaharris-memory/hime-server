@@ -61,9 +61,14 @@ class SearchBody(BaseModel):
 
 @router.post("/search/")
 def search(body: SearchBody):
-    print("ahihi")
-    print(body)
-    return query_search(body.keyword)
+    keyword = body.keyword
+    search_opts = {
+        "attributes_to_search_on": ["id", "title", "shorttext", "html"],
+    }
+    stories = index_story.search(keyword, search_opts)
+    lessons = index_lesson.search(keyword, search_opts)
+    results = stories.hits + lessons.hits
+    return results
 
 
 @router.post("/upload")
