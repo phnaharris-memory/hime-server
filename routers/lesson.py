@@ -139,7 +139,7 @@ def ocr(image: UploadFile = File(...)):
         save_upload_file(image, pathlib.Path("./images/" + image.filename))
         dataToSearch = process_ocr("./images/" + image.filename)
         search_opts = {
-            "attributesToSearchOn": ["html"],
+            "attributesToSearchOn": ["title", "shorttext", "html"],
         }
         # stories = index_story.search(dataToSearch, search_opts)
         # lessons = index_lesson.search(dataToSearch, search_opts)
