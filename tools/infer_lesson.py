@@ -185,7 +185,7 @@ def get_relative_lesson(image):
     try:
         sqliteConnection = sqlite3.connect("./data/HIME.db")
         print("get rela2")
-        query = "SELECT * from IMAGINE"
+        query = "SELECT * from IMAGINE WHERE ID_BAIHOC > 0"
         cursor = sqliteConnection.execute(query)
         data = cursor.fetchall()
         print("get rela3")
