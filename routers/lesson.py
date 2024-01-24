@@ -144,7 +144,7 @@ def ocr(image: UploadFile = File(...)):
         # stories = index_story.search(dataToSearch, search_opts)
         # lessons = index_lesson.search(dataToSearch, search_opts)
         # results = stories["hits"] + lessons["hits"]
-        return index_share.search(dataToSearch, search_opts)["hits"]
+        return index_story.search(dataToSearch, search_opts)["hits"]
     except:
         e = sys.exc_info()[1]
         raise HTTPException(status_code=500, detail=str(e))
